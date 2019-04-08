@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import * as sql from "mssql";
 import {connect} from "../connection-factory";
 import {Readable, Transform, Writable} from "stream";
