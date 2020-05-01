@@ -2,7 +2,7 @@
 import * as sql from "mssql";
 import {connect} from "../connection-factory";
 import {Readable, Transform, Writable} from "stream";
-const JSONStream = require('JSONStream');
+import * as JSONStream from "JSONStream";
 import {ObjectTransformStream} from "object-transform-stream";
 
 const s = process.argv[2];
@@ -72,12 +72,12 @@ async function runPostProc(pool: sql.ConnectionPool, id: any) {
 }
 
 async function runImpl(pool: sql.ConnectionPool, readabe: Readable, writable: Writable) {
-    let jsonParser: Transform = JSONStream.parse(".*");
-    let rowArchiver = new ObjectTransformStream(async (row: any) => storeRowAsJSON(pool, row));
-    let postProc = new ObjectTransformStream(async (input: {id: string}) => runPostProc(pool, input.id));
-    let stringifier: Transform = JSONStream.stringify();
+    const jsonParser = JSONStream.parse(".*") as any as Transform;
+    const rowArchiver = new ObjectTransformStream(async (row: any) => storeRowAsJSON(pool, row));
+    const postProc = new ObjectTransformStream(async (input: {id: string}) => runPostProc(pool, input.id));
+    const stringifier = JSONStream.stringify() as any as Transform;
 
-    let transformers: Transform[] = [
+    const transformers: Transform[] = [
         jsonParser
         ,rowArchiver
         ,postProc
