@@ -16,6 +16,7 @@
   "files": [
     "./src/connection-factory.ts",
     "./src/query/cli.ts",
-    "./src/insert-json-row/cli.ts"
+    "./src/insert-json-row/cli.ts",
+    "./src/ala-query/cli.ts"
   ]
 }

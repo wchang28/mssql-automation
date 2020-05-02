@@ -1,15 +1,14 @@
 {
   "name": "mssql-automation",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Automation Tools for MSSQL",
   "scripts": {
-    "transpile": "tsc",
-    "query": "node ./dist/query/cli.js",
-    "insert-json-row": "node ./dist/insert-json-row/cli.js"
+    "transpile": "tsc"
   },
   "bin": {
     "mssql-query": "./dist/query/cli.js",
-    "mssql-insert-json-row": "./dist/insert-json-row/cli.js"
+    "mssql-insert-json-row": "./dist/insert-json-row/cli.js",
+    "ala-query": "./dist/ala-query/cli.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +21,7 @@
     "@types/mssql": "^6.0.0",
     "@types/node": "^13.13.4",
     "JSONStream": "^1.3.5",
+    "alasql": "^0.5.9",
     "mssql": "^6.2.0",
     "object-transform-stream": "https://github.com/wchang28/object-transform-stream.git"
   },
