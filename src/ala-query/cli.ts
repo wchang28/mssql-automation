@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import * as fs from "fs";
 const alasql = require("alasql");
 
