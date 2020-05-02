@@ -1,6 +1,10 @@
 #!/usr/bin/env node
-import * as fs from "fs";
 const alasql = require("alasql");
+import {StringReceiver} from "helper-ios";
+import {pipeline} from "stream";
+import {promisify} from "util";
+
+const piplinePS = promisify(pipeline);
 
 const query = process.argv[2];
 if (!query) {
@@ -8,12 +12,19 @@ if (!query) {
     process.exit(1);
 }
 
-try {
-    const json = fs.readFileSync(0, "utf-8");
-    const data = JSON.parse(json);
-    const ret = alasql(query, [data]);
+async function run(query: string) {
+   const sr = new StringReceiver();
+   await piplinePS(process.stdin, sr);
+   const json = sr.text;
+   const data = JSON.parse(json);
+   return alasql(query, [data]);
+}
+
+run(query)
+.then((ret) => {
     process.stdout.write(JSON.stringify(ret));
-} catch (e) {
+    process.exit(0);
+}).catch((e) => {
     console.error(e);
     process.exit(1);
-}
+});
