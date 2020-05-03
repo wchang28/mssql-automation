@@ -66,7 +66,7 @@ async function run() {
             const s = sr.text;
             return JSON.parse(s);
         } catch (e) {
-            process.stderr.write(`${e.toString()}`)
+            process.stderr.write(`${e.toString()}\n`);
             return {};
         }
     });

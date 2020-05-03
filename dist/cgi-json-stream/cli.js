@@ -114,7 +114,7 @@ function run() {
                                     return [2 /*return*/, JSON.parse(s)];
                                 case 2:
                                     e_1 = _a.sent();
-                                    process.stderr.write("" + e_1.toString());
+                                    process.stderr.write(e_1.toString() + "\n");
                                     return [2 /*return*/, {}];
                                 case 3: return [2 /*return*/];
                             }
