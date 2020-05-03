@@ -17,6 +17,7 @@
     "./src/connection-factory.ts",
     "./src/query/cli.ts",
     "./src/insert-json-row/cli.ts",
-    "./src/ala-query/cli.ts"
+    "./src/ala-query/cli.ts",
+    "./src/cgi-json-stream/cli.ts"
   ]
 }

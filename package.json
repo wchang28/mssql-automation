@@ -8,7 +8,8 @@
   "bin": {
     "mssql-query": "./dist/query/cli.js",
     "mssql-insert-json-row": "./dist/insert-json-row/cli.js",
-    "ala-query": "./dist/ala-query/cli.js"
+    "ala-query": "./dist/ala-query/cli.js",
+    "cgi-json-stream": "./dist/cgi-json-stream/cli.js"
   },
   "repository": {
     "type": "git",
@@ -24,7 +25,8 @@
     "alasql": "^0.5.9",
     "helper-ios": "https://github.com/wchang28/helper-ios.git",
     "mssql": "^6.2.0",
-    "object-transform-stream": "https://github.com/wchang28/object-transform-stream.git"
+    "object-transform-stream": "https://github.com/wchang28/object-transform-stream.git",
+    "parse-command": "0.0.102"
   },
   "devDependencies": {
     "typescript": "^3.8.3"
