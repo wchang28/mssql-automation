@@ -4,7 +4,6 @@ import {CGIIO, StringReceiver} from "helper-ios";
 import {ObjectTransformStream} from "object-transform-stream";
 import {pipeline} from "stream";
 import {promisify} from "util";
-import {parseCommandp} from "parse-command";
 
 const piplinePS = promisify(pipeline);
 
@@ -16,13 +15,42 @@ interface CGIRunParams {
 
 const ERROR_NOTHING_TO_RUN = "nothing to run";
 
+function parse_cmdline(cmdline) {
+    var re_next_arg = /^\s*((?:(?:"(?:\\.|[^"])*")|(?:'[^']*')|\\.|\S)+)\s*(.*)$/;
+    var next_arg = ['', '', cmdline];
+    var args = [];
+    while (next_arg = re_next_arg.exec(next_arg[2])) {
+        var quoted_arg = next_arg[1];
+        var unquoted_arg = "";
+        while (quoted_arg.length > 0) {
+            if (/^"/.test(quoted_arg)) {
+                var quoted_part = /^"((?:\\.|[^"])*)"(.*)$/.exec(quoted_arg);
+                unquoted_arg += quoted_part[1].replace(/\\(.)/g, "$1");
+                quoted_arg = quoted_part[2];
+            } else if (/^'/.test(quoted_arg)) {
+                var quoted_part = /^'([^']*)'(.*)$/.exec(quoted_arg);
+                unquoted_arg += quoted_part[1];
+                quoted_arg = quoted_part[2];
+            } else if (/^\\/.test(quoted_arg)) {
+                unquoted_arg += quoted_arg[1];
+                quoted_arg = quoted_arg.substring(2);
+            } else {
+                unquoted_arg += quoted_arg[0];
+                quoted_arg = quoted_arg.substring(1);
+            }
+        }
+        args[args.length] = unquoted_arg;
+    }
+    return args;
+}
+
 async function run() {
     const cgiRunner = new ObjectTransformStream<CGIRunParams, any>(async (input: CGIRunParams) => {
         console.log(`input=${JSON.stringify(input)}`);
         try {
             if (!input || !input.cmd) throw ERROR_NOTHING_TO_RUN;
             console.log(`before parseCommandp(), input.cmd=${input.cmd}`);
-            const args = await parseCommandp(input.cmd);
+            const args = parse_cmdline(input.cmd);
             console.log(`args=${JSON.stringify(args)}`);
             if (args.length === 0) throw ERROR_NOTHING_TO_RUN;
             const command = args[0];
@@ -49,11 +77,10 @@ async function run() {
     const jsonParser = JSONStream.parse(".*");
     const stringifier = JSONStream.stringify();
     await piplinePS(process.stdin, jsonParser, cgiRunner, stringifier, process.stdout);
- }
+}
 
- run()
-.then((ret) => {
-    process.stdout.write(JSON.stringify(ret));
+run()
+.then(() => {
     process.exit(0);
 }).catch((e) => {
     console.error(e);

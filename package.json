@@ -1,6 +1,6 @@
 {
   "name": "mssql-automation",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Automation Tools for MSSQL",
   "scripts": {
     "transpile": "tsc"
@@ -25,8 +25,7 @@
     "alasql": "^0.5.9",
     "helper-ios": "https://github.com/wchang28/helper-ios.git",
     "mssql": "^6.2.0",
-    "object-transform-stream": "https://github.com/wchang28/object-transform-stream.git",
-    "parse-command": "0.0.102"
+    "object-transform-stream": "https://github.com/wchang28/object-transform-stream.git"
   },
   "devDependencies": {
     "typescript": "^3.8.3"

@@ -42,9 +42,39 @@ var helper_ios_1 = require("helper-ios");
 var object_transform_stream_1 = require("object-transform-stream");
 var stream_1 = require("stream");
 var util_1 = require("util");
-var parse_command_1 = require("parse-command");
 var piplinePS = util_1.promisify(stream_1.pipeline);
 var ERROR_NOTHING_TO_RUN = "nothing to run";
+function parse_cmdline(cmdline) {
+    var re_next_arg = /^\s*((?:(?:"(?:\\.|[^"])*")|(?:'[^']*')|\\.|\S)+)\s*(.*)$/;
+    var next_arg = ['', '', cmdline];
+    var args = [];
+    while (next_arg = re_next_arg.exec(next_arg[2])) {
+        var quoted_arg = next_arg[1];
+        var unquoted_arg = "";
+        while (quoted_arg.length > 0) {
+            if (/^"/.test(quoted_arg)) {
+                var quoted_part = /^"((?:\\.|[^"])*)"(.*)$/.exec(quoted_arg);
+                unquoted_arg += quoted_part[1].replace(/\\(.)/g, "$1");
+                quoted_arg = quoted_part[2];
+            }
+            else if (/^'/.test(quoted_arg)) {
+                var quoted_part = /^'([^']*)'(.*)$/.exec(quoted_arg);
+                unquoted_arg += quoted_part[1];
+                quoted_arg = quoted_part[2];
+            }
+            else if (/^\\/.test(quoted_arg)) {
+                unquoted_arg += quoted_arg[1];
+                quoted_arg = quoted_arg.substring(2);
+            }
+            else {
+                unquoted_arg += quoted_arg[0];
+                quoted_arg = quoted_arg.substring(1);
+            }
+        }
+        args[args.length] = unquoted_arg;
+    }
+    return args;
+}
 function run() {
     return __awaiter(this, void 0, void 0, function () {
         var cgiRunner, jsonParser, stringifier;
@@ -60,13 +90,11 @@ function run() {
                                     console.log("input=" + JSON.stringify(input));
                                     _a.label = 1;
                                 case 1:
-                                    _a.trys.push([1, 4, , 5]);
+                                    _a.trys.push([1, 3, , 4]);
                                     if (!input || !input.cmd)
                                         throw ERROR_NOTHING_TO_RUN;
                                     console.log("before parseCommandp(), input.cmd=" + input.cmd);
-                                    return [4 /*yield*/, parse_command_1.parseCommandp(input.cmd)];
-                                case 2:
-                                    args_1 = _a.sent();
+                                    args_1 = parse_cmdline(input.cmd);
                                     console.log("args=" + JSON.stringify(args_1));
                                     if (args_1.length === 0)
                                         throw ERROR_NOTHING_TO_RUN;
@@ -86,15 +114,15 @@ function run() {
                                     });
                                     sr = new helper_ios_1.StringReceiver();
                                     return [4 /*yield*/, piplinePS(cgiIO, sr)];
-                                case 3:
+                                case 2:
                                     _a.sent();
                                     s = sr.text;
                                     return [2 /*return*/, JSON.parse(s)];
-                                case 4:
+                                case 3:
                                     e_1 = _a.sent();
                                     console.log("err=" + JSON.stringify(e_1));
                                     return [2 /*return*/, {}];
-                                case 5: return [2 /*return*/];
+                                case 4: return [2 /*return*/];
                             }
                         });
                     }); });
@@ -109,8 +137,7 @@ function run() {
     });
 }
 run()
-    .then(function (ret) {
-    process.stdout.write(JSON.stringify(ret));
+    .then(function () {
     process.exit(0);
 }).catch(function (e) {
     console.error(e);
