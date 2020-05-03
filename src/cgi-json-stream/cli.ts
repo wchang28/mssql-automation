@@ -15,33 +15,34 @@ interface CGIRunParams {
 
 const ERROR_NOTHING_TO_RUN = "nothing to run";
 
-function parse_cmdline(cmdline) {
-    var re_next_arg = /^\s*((?:(?:"(?:\\.|[^"])*")|(?:'[^']*')|\\.|\S)+)\s*(.*)$/;
-    var next_arg = ['', '', cmdline];
-    var args = [];
-    while (next_arg = re_next_arg.exec(next_arg[2])) {
-        var quoted_arg = next_arg[1];
-        var unquoted_arg = "";
-        while (quoted_arg.length > 0) {
-            if (/^"/.test(quoted_arg)) {
-                var quoted_part = /^"((?:\\.|[^"])*)"(.*)$/.exec(quoted_arg);
-                unquoted_arg += quoted_part[1].replace(/\\(.)/g, "$1");
-                quoted_arg = quoted_part[2];
-            } else if (/^'/.test(quoted_arg)) {
-                var quoted_part = /^'([^']*)'(.*)$/.exec(quoted_arg);
-                unquoted_arg += quoted_part[1];
-                quoted_arg = quoted_part[2];
-            } else if (/^\\/.test(quoted_arg)) {
-                unquoted_arg += quoted_arg[1];
-                quoted_arg = quoted_arg.substring(2);
-            } else {
-                unquoted_arg += quoted_arg[0];
-                quoted_arg = quoted_arg.substring(1);
+function commandArgs2Array(text) {
+    const re = /^"[^"]*"$/; // Check if argument is surrounded with double-quotes
+    const re2 = /^([^"]|[^"].*?[^"])$/; // Check if argument is NOT surrounded with double-quotes
+    let arr = [];
+    let argPart = null;
+    text && text.split(" ").forEach(function(arg) {
+        if ((re.test(arg) || re2.test(arg)) && !argPart) {
+            arr.push(arg);
+        } else {
+            argPart = argPart ? argPart + " " + arg : arg;
+            // If part is complete (ends with a double quote), we can add it to the array
+            if (/"$/.test(argPart)) {
+                arr.push(argPart);
+                argPart = null;
             }
         }
-        args[args.length] = unquoted_arg;
-    }
-    return args;
+    });
+    return arr;
+}
+
+function parse_cmdline(cmd: string) {
+    const args = commandArgs2Array(cmd) as string[];
+    return args.map((arg) => {
+        if (arg.length >= 2 && arg[0] == '"' && arg[arg.length - 1] == '"') {
+            arg = arg.substr(1, arg.length-2);
+        }
+        return arg;
+    });
 }
 
 async function run() {
@@ -82,3 +83,13 @@ run()
     console.error(e);
     process.exit(1);
 });
+
+/*
+const cmd = 'c:\\dev\\run.exe -d "XXX YYY" -s 20200325'
+//const cmd = "c:/dev/run.exe -d XXXYYY -s 20200325"
+console.log(`cmd=${cmd}`);
+const args = parse_cmdline(cmd);
+for (const arg of args) {
+    console.log(`[${arg}]`);
+}
+*/
