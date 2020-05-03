@@ -22,10 +22,10 @@ async function run() {
         try {
             if (!input && !input.cmd) throw ERROR_NOTHING_TO_RUN;
             const args = await parseCommandp(input.cmd);
+            console.log(`args=${JSON.stringify(args)}`);
             if (args.length === 0) throw ERROR_NOTHING_TO_RUN;
             const command = args[0];
             args.shift();
-            const sr = new StringReceiver();
             const cgiIO = new CGIIO(() => {
                 const ret: {command: string, args?: string[], cwd?: string, env?: any} = {
                     command
@@ -36,6 +36,7 @@ async function run() {
                 console.log(`ret=${JSON.stringify(ret)}`);
                 return ret;
             });
+            const sr = new StringReceiver();
             await piplinePS(cgiIO, sr);
             const s = sr.text;
             return JSON.parse(s);

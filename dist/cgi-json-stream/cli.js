@@ -53,7 +53,7 @@ function run() {
             switch (_a.label) {
                 case 0:
                     cgiRunner = new object_transform_stream_1.ObjectTransformStream(function (input) { return __awaiter(_this, void 0, void 0, function () {
-                        var args_1, command_1, sr, cgiIO, s, e_1;
+                        var args_1, command_1, cgiIO, sr, s, e_1;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
@@ -66,11 +66,11 @@ function run() {
                                     return [4 /*yield*/, parse_command_1.parseCommandp(input.cmd)];
                                 case 2:
                                     args_1 = _a.sent();
+                                    console.log("args=" + JSON.stringify(args_1));
                                     if (args_1.length === 0)
                                         throw ERROR_NOTHING_TO_RUN;
                                     command_1 = args_1[0];
                                     args_1.shift();
-                                    sr = new helper_ios_1.StringReceiver();
                                     cgiIO = new helper_ios_1.CGIIO(function () {
                                         var ret = {
                                             command: command_1,
@@ -83,6 +83,7 @@ function run() {
                                         console.log("ret=" + JSON.stringify(ret));
                                         return ret;
                                     });
+                                    sr = new helper_ios_1.StringReceiver();
                                     return [4 /*yield*/, piplinePS(cgiIO, sr)];
                                 case 3:
                                     _a.sent();
