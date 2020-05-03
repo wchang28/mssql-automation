@@ -18,6 +18,7 @@ const ERROR_NOTHING_TO_RUN = "nothing to run";
 
 async function run() {
     const cgiRunner = new ObjectTransformStream<CGIRunParams, any>(async (input: CGIRunParams) => {
+        console.log(`input=${JSON.stringify(input)}`);
         try {
             if (!input && !input.cmd) throw ERROR_NOTHING_TO_RUN;
             const args = await parseCommandp(input.cmd);
@@ -32,12 +33,14 @@ async function run() {
                 };
                 if (args.length > 0) ret.args = args;
                 if (input.envJSON) ret.env = JSON.parse(input.envJSON);
+                console.log(`ret=${JSON.stringify(ret)}`);
                 return ret;
             });
             await piplinePS(cgiIO, sr);
             const s = sr.text;
             return JSON.parse(s);
         } catch (e) {
+            console.log(`err=${JSON.stringify(e)}`);
             return {};
         }
     });

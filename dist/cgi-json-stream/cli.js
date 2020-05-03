@@ -57,11 +57,14 @@ function run() {
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
-                                    _a.trys.push([0, 3, , 4]);
+                                    console.log("input=" + JSON.stringify(input));
+                                    _a.label = 1;
+                                case 1:
+                                    _a.trys.push([1, 4, , 5]);
                                     if (!input && !input.cmd)
                                         throw ERROR_NOTHING_TO_RUN;
                                     return [4 /*yield*/, parse_command_1.parseCommandp(input.cmd)];
-                                case 1:
+                                case 2:
                                     args_1 = _a.sent();
                                     if (args_1.length === 0)
                                         throw ERROR_NOTHING_TO_RUN;
@@ -77,17 +80,19 @@ function run() {
                                             ret.args = args_1;
                                         if (input.envJSON)
                                             ret.env = JSON.parse(input.envJSON);
+                                        console.log("ret=" + JSON.stringify(ret));
                                         return ret;
                                     });
                                     return [4 /*yield*/, piplinePS(cgiIO, sr)];
-                                case 2:
+                                case 3:
                                     _a.sent();
                                     s = sr.text;
                                     return [2 /*return*/, JSON.parse(s)];
-                                case 3:
+                                case 4:
                                     e_1 = _a.sent();
+                                    console.log("err=" + JSON.stringify(e_1));
                                     return [2 /*return*/, {}];
-                                case 4: return [2 /*return*/];
+                                case 5: return [2 /*return*/];
                             }
                         });
                     }); });
