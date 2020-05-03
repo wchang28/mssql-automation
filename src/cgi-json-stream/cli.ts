@@ -20,7 +20,8 @@ async function run() {
     const cgiRunner = new ObjectTransformStream<CGIRunParams, any>(async (input: CGIRunParams) => {
         console.log(`input=${JSON.stringify(input)}`);
         try {
-            if (!input && !input.cmd) throw ERROR_NOTHING_TO_RUN;
+            if (!input || !input.cmd) throw ERROR_NOTHING_TO_RUN;
+            console.log(`before parseCommandp(), input.cmd=${input.cmd}`);
             const args = await parseCommandp(input.cmd);
             console.log(`args=${JSON.stringify(args)}`);
             if (args.length === 0) throw ERROR_NOTHING_TO_RUN;

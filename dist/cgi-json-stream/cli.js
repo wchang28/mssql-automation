@@ -61,8 +61,9 @@ function run() {
                                     _a.label = 1;
                                 case 1:
                                     _a.trys.push([1, 4, , 5]);
-                                    if (!input && !input.cmd)
+                                    if (!input || !input.cmd)
                                         throw ERROR_NOTHING_TO_RUN;
+                                    console.log("before parseCommandp(), input.cmd=" + input.cmd);
                                     return [4 /*yield*/, parse_command_1.parseCommandp(input.cmd)];
                                 case 2:
                                     args_1 = _a.sent();
