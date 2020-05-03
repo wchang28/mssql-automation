@@ -87,15 +87,10 @@ function run() {
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
-                                    console.log("input=" + JSON.stringify(input));
-                                    _a.label = 1;
-                                case 1:
-                                    _a.trys.push([1, 3, , 4]);
+                                    _a.trys.push([0, 2, , 3]);
                                     if (!input || !input.cmd)
                                         throw ERROR_NOTHING_TO_RUN;
-                                    console.log("before parseCommandp(), input.cmd=" + input.cmd);
                                     args_1 = parse_cmdline(input.cmd);
-                                    console.log("args=" + JSON.stringify(args_1));
                                     if (args_1.length === 0)
                                         throw ERROR_NOTHING_TO_RUN;
                                     command_1 = args_1[0];
@@ -109,20 +104,19 @@ function run() {
                                             ret.args = args_1;
                                         if (input.envJSON)
                                             ret.env = JSON.parse(input.envJSON);
-                                        console.log("ret=" + JSON.stringify(ret));
                                         return ret;
                                     });
                                     sr = new helper_ios_1.StringReceiver();
                                     return [4 /*yield*/, piplinePS(cgiIO, sr)];
-                                case 2:
+                                case 1:
                                     _a.sent();
                                     s = sr.text;
                                     return [2 /*return*/, JSON.parse(s)];
-                                case 3:
+                                case 2:
                                     e_1 = _a.sent();
-                                    console.log("err=" + JSON.stringify(e_1));
+                                    process.stderr.write("" + e_1.toString());
                                     return [2 /*return*/, {}];
-                                case 4: return [2 /*return*/];
+                                case 3: return [2 /*return*/];
                             }
                         });
                     }); });

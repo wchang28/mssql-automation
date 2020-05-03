@@ -46,12 +46,9 @@ function parse_cmdline(cmdline) {
 
 async function run() {
     const cgiRunner = new ObjectTransformStream<CGIRunParams, any>(async (input: CGIRunParams) => {
-        console.log(`input=${JSON.stringify(input)}`);
         try {
             if (!input || !input.cmd) throw ERROR_NOTHING_TO_RUN;
-            console.log(`before parseCommandp(), input.cmd=${input.cmd}`);
             const args = parse_cmdline(input.cmd);
-            console.log(`args=${JSON.stringify(args)}`);
             if (args.length === 0) throw ERROR_NOTHING_TO_RUN;
             const command = args[0];
             args.shift();
@@ -62,7 +59,6 @@ async function run() {
                 };
                 if (args.length > 0) ret.args = args;
                 if (input.envJSON) ret.env = JSON.parse(input.envJSON);
-                console.log(`ret=${JSON.stringify(ret)}`);
                 return ret;
             });
             const sr = new StringReceiver();
@@ -70,7 +66,7 @@ async function run() {
             const s = sr.text;
             return JSON.parse(s);
         } catch (e) {
-            console.log(`err=${JSON.stringify(e)}`);
+            process.stderr.write(`${e.toString()}`)
             return {};
         }
     });
