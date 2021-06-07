@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import * as JSONStream from "JSONStream";
-import {CGIIO, StringReceiver} from "helper-ios";
+import {CGIIO, StringReceiver, StringStream} from "helper-ios";
 import {ObjectTransformStream} from "object-transform-stream";
 import {pipeline} from "stream";
 import {promisify} from "util";
@@ -11,6 +11,7 @@ interface CGIRunParams {
     cmd: string;
     cwd?: string;
     envJSON?: string;
+    stdin?: string;
 }
 
 const ERROR_NOTHING_TO_RUN = "nothing to run";
@@ -63,7 +64,12 @@ async function run() {
                 return ret;
             });
             const sr = new StringReceiver();
-            await piplinePS(cgiIO, sr);
+            if (input.stdin && typeof input.stdin === "string" && input.stdin.length > 0) {
+                const ss = new StringStream(input.stdin);
+                await piplinePS(ss, cgiIO, sr);
+            } else {
+                await piplinePS(cgiIO, sr);
+            }
             const s = sr.text;
             return JSON.parse(s);
         } catch (e) {

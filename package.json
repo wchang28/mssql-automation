@@ -1,6 +1,6 @@
 {
   "name": "mssql-automation",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "Automation Tools for MSSQL",
   "scripts": {
     "transpile": "tsc"

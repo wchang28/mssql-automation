@@ -81,11 +81,11 @@ function run() {
             switch (_a.label) {
                 case 0:
                     cgiRunner = new object_transform_stream_1.ObjectTransformStream(function (input) { return __awaiter(_this, void 0, void 0, function () {
-                        var args_1, command_1, cgiIO, sr, s, e_1;
+                        var args_1, command_1, cgiIO, sr, ss, s, e_1;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
-                                    _a.trys.push([0, 2, , 3]);
+                                    _a.trys.push([0, 5, , 6]);
                                     if (!input || !input.cmd)
                                         throw ERROR_NOTHING_TO_RUN;
                                     args_1 = parse_cmdline(input.cmd);
@@ -105,16 +105,24 @@ function run() {
                                         return ret;
                                     });
                                     sr = new helper_ios_1.StringReceiver();
-                                    return [4 /*yield*/, piplinePS(cgiIO, sr)];
+                                    if (!(input.stdin && typeof input.stdin === "string" && input.stdin.length > 0)) return [3 /*break*/, 2];
+                                    ss = new helper_ios_1.StringStream(input.stdin);
+                                    return [4 /*yield*/, piplinePS(ss, cgiIO, sr)];
                                 case 1:
                                     _a.sent();
+                                    return [3 /*break*/, 4];
+                                case 2: return [4 /*yield*/, piplinePS(cgiIO, sr)];
+                                case 3:
+                                    _a.sent();
+                                    _a.label = 4;
+                                case 4:
                                     s = sr.text;
                                     return [2 /*return*/, JSON.parse(s)];
-                                case 2:
+                                case 5:
                                     e_1 = _a.sent();
                                     process.stderr.write(e_1.toString() + "\n");
                                     return [2 /*return*/, {}];
-                                case 3: return [2 /*return*/];
+                                case 6: return [2 /*return*/];
                             }
                         });
                     }); });
