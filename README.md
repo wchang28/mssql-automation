@@ -1,6 +1,8 @@
 # Automation Tools for MSSQL
 
-Installation:
+**Installation**:
+
+`npm install -g msnodesqlv8`
 
 `npm install -g https://github.com/wchang28/mssql-automation.git`
 
